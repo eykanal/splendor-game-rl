@@ -12,7 +12,7 @@ NUM_TOKENS = {
     NUM_PLAYERS[2]: 7,
 }
 
-GEMS = ['dimaond', 'emerald', 'onyx', 'ruby', 'sapphire']
+GEMS = ['diamond', 'emerald', 'onyx', 'ruby', 'sapphire']
 WILD = ['gold', ]
 
 CARDS_FILE = 'cards.p'

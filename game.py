@@ -41,3 +41,19 @@ class Game:
         self.players = []
         for _ in range(num_players):
             self.players.append(c.Player())
+
+        # useful vars
+        self.current_player = self.players[0]
+
+        self.take_turn()
+
+    def check_earned_tile(self):
+        for tile in self.tiles:
+            for player in self.players:
+                # TODO: working here
+                pass
+
+
+    def take_turn(self):
+        pass
+
