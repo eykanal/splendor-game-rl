@@ -6,44 +6,54 @@ Author: Eliezer Kanal
 '''
 
 import pickle
+import random
 
-import settings
+from settings import NUM_TOKENS, GEMS, WILD, CARDS_FILE, TILES_FILE
 import components as c
 
 
 class Game:
     def __init__(self, num_players):
-        num_tokens = settings.NUM_TOKENS[num_players]
+        self.players = []
+        self.tokens = {gem: 0 for gem in GEMS+WILD}
+        self.cards = {1: [], 2: [], 3: []}
+        self.tiles = []
 
         # create tokens
-        self.tokens = {}
-        for gem in settings.GEMS:
-            self.tokens[gem] = []
-            for _ in range(num_tokens):
-                self.tokens[gem].append(c.Token(gem))
-
-        # add wilds
-        self.tokens['g'] = [c.Token('g') for n in range(5)]
+        num_tokens = NUM_TOKENS[num_players]
+        for token in GEMS:
+            self.tokens[token] = num_tokens
+        for token in WILD:
+            self.tokens[token] = 5
 
         # define the playing cards
-        cards = pickle.loads(open(settings.CARDS_FILE, 'r'))
-        self.cards = []
+        with open(CARDS_FILE, 'rb') as f:
+            cards = pickle.load(f)
+        
         for card in cards:
-            self.cards.append(c.Card(*card))
+            self.cards[card[0]].append(card[1:])
+
+        for level in self.cards:
+            random.shuffle(self.cards[level])
 
         # define the tiles
-        tiles = pickle.loads(open(settings.TILES_FILE, 'r'))
-        self.tiles = []
+        with open(TILES_FILE, 'rb') as f:
+            tiles = pickle.load(f)
+        
         for tile in tiles:
             self.tiles.append(c.Tile(*tile))
 
+        random.shuffle(self.tiles)
+
         # add players
-        self.players = []
         for _ in range(num_players):
             self.players.append(c.Player())
 
-        # useful vars
+        # set up first turn
         self.current_player = self.players[0]
+
+        # set up currently shown cards
+
 
         self.take_turn()
 
@@ -56,4 +66,3 @@ class Game:
 
     def take_turn(self):
         pass
-
