@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-'''
-Implementation of Splendor game in python.
-
-Author: Eliezer Kanal
-'''
-
 NUM_PLAYERS = [2, 3, 4]
 NUM_TOKENS = {
     NUM_PLAYERS[0]: 4,

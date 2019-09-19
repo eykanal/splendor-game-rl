@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-'''
-Implementation of Splendor game in python.
-
-Author: Eliezer Kanal
-'''
 from settings import GEMS, WILD
 
 

@@ -1,10 +1,3 @@
-#!/usr/bin/env python
-'''
-Implementation of Splendor game in python.
-
-Author: Eliezer Kanal
-'''
-
 import pickle
 import json
 

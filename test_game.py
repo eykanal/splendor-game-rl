@@ -1,7 +1,3 @@
-'''
-Testing framework for splendor-game
-'''
-
 import unittest
 
 from game import Game
