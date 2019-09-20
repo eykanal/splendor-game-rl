@@ -33,7 +33,7 @@ class Player:
         '''
         for token in tokens:
             if game.tokens[token] == 0:
-                raise RuntimeError('Requested token from empty pile')
+                raise RuntimeError('Requested token from empty stack')
             game.tokens[token] -= 1
             self.tokens[token] += 1
         return game
@@ -50,12 +50,12 @@ class Player:
             game: updated Game instance
         '''
         if game.tokens[token] < 4:
-            raise RuntimeError('Requested two token from pile of 3 or less')
+            raise RuntimeError('Requested two token from stack of 3 or less')
         game.tokens[token] -= 2
         self.tokens[token] += 2
         return game
 
-    def _take card(self, card, game):
+    def _take_card(self, card, game):
         pass
 
     def _discard_tokens(self):
@@ -65,26 +65,31 @@ class Player:
         '''
 
 
-class Token:
-    def __init__(self, gem):
-        self.gem = gem
+class Ownable:
+    '''
+    Base class for any game element which can shift ownership
+    '''
+    def __init__(self):
         self.owner = None
 
-    def take(self, player):
-        self.owner = player
+
+class Token(Ownable):
+    def __init__(self, gem):
+        super().__init(self, *args, **kwargs)
+        self.gem = gem
 
 
-class Card:
+class Card(Ownable):
     def __init__(self, level, gem, cost, prestige):
+        super().__init(self, *args, **kwargs)
         self.level = level
         self.gem = gem
         self.cost = cost
         self.prestige = prestige
-        self.owner = None
 
 
-class Tile:
+class Tile(Ownable):
     def __init__(self, requirement, prestige):
+        super().__init(self, *args, **kwargs)
         self.requirement = requirement
         self.prestige = prestige
-        self.owner = None
