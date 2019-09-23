@@ -3,11 +3,8 @@ from settings import GEMS, WILD
 
 class Player:
     def __init__(self):
-        all_tokens = GEMS + WILD
-        self.tokens = {gem: 0 for gem in all_tokens}
-        self.cards = {gem: [] for gem in GEMS}
-        self.hand = []
         self.tiles = []
+        self.num_turns_played = 0
 
     def prestige(self):
         card_prestige = sum([c.prestige for c in self.cards])
@@ -74,22 +71,24 @@ class Ownable:
 
 
 class Token(Ownable):
-    def __init__(self, gem):
-        super().__init(self, *args, **kwargs)
+    def __init__(self, gem, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.gem = gem
 
 
 class Card(Ownable):
-    def __init__(self, level, gem, cost, prestige):
-        super().__init(self, *args, **kwargs)
+    def __init__(self, level, gem, cost, prestige, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.level = level
         self.gem = gem
         self.cost = cost
         self.prestige = prestige
+        self.in_hand = False
+        self.in_play = False
 
 
 class Tile(Ownable):
-    def __init__(self, requirement, prestige):
-        super().__init(self, *args, **kwargs)
+    def __init__(self, requirement, prestige, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.requirement = requirement
         self.prestige = prestige
