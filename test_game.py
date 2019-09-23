@@ -10,6 +10,9 @@ class TestGame(unittest.TestCase):
         self.game_3 = Game(3)
         self.game_4 = Game(4)
 
+    def test_assert_correct_num_tokens(self):
+        self.game_2.TokenManager
+
     def test_player_take_three_tokens(self):
         player1 = self.game_3.players[0]
         game_3 = player1._take_three_tokens(['diamond', 'emerald', 'onyx'], self.game_3)

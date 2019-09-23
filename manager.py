@@ -1,4 +1,5 @@
 import random
+import json
 
 
 class ItemManager:
@@ -23,36 +24,50 @@ class ItemManager:
     def get_items(self):
         return self.items
 
-    def get_item_count(self):
-        return len(self.get_items())
-
-    def get_filtered_items(self, filters):
-        return list(filter(lambda x: all(f(x) for f in filters), self.items))
+    def _get_filtered_indices(self, filter_tuples):
+        # returns list of bool values indicating filter match
+        filters = []
+        for filt in filter_tuples:
+            def fx(x): return getattr(x, filt[0]) == filt[1]
+            filters.append(fx)
+        return list(map(lambda x: all(f(x) for f in filters), self.items))
 
     def get_owned_items(self, owner):
-        def f1(x): return x.owner == owner
-        return self.get_filtered_items([f1,])
+        filt = [("owner", owner),]
+        return self._get_filtered_indices(filt)
 
     def shuffle(self):
         random.shuffle(self.items)
 
+    def to_json(self):
+        return self.items
+
+    def to_jsons(self):
+        json.dumps(self.items)
+
 
 class CardManager(ItemManager):
     def get_played_cards(self, owner):
-        def f1(x): return x.owner == owner
-        def f2(x): return x.in_hand == False
-        return self.get_filtered_items([f1, f2,])
+        filt = [("owner", owner), ("in_hand", False)]
+        return self._get_filtered_indices(filt)
 
     def put_four_in_play(self):
-        def f1(x): return x.owner == None
-        cards = self.get_filtered_items([f1,])
+        for level in range(3):
+            filt = [("owner", None), ("level", level)]
+            ind = self._get_filtered_indices(filt)
 
-        for card in self.items[0:min(4, len(cards))]:
-            self.items[card].in_play = True
+            for card in ind[0:min(4, sum(ind))]:
+                self.items[card].in_play = True
 
 
 class TokenManager(ItemManager):
-    pass
+    def _get_one(self, gem):
+        filt = [("gem", gem), ("owner", None)]
+        token = self._get_filtered_indices(filt)
+        return token[0]
+
+    def take(self, gem, owner):
+        pass
 
 
 class TileManager(ItemManager):
