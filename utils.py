@@ -3,10 +3,16 @@ import json
 
 import click
 import mongoengine as me
+import pymongo
 
 from settings import GEMS, WILD
-from models import Card, Tile, Token, DefaultGame
+from models import Card, Tile, Token
 
+
+def connect_to_db():
+    client = pymongo.MongoClient('localhost', 27017)
+    db = client.splendor
+    return db
 
 @click.group()
 def cli():
@@ -23,32 +29,33 @@ def pickle_data(json_file):
     output_name = '.'.join(json_file.split('.')[0:-1])
     pickle.dump(data, open("%s.p" % output_name, "wb"))
 
+
 @cli.command()
 def init_mongo():
     """
     Populate the mongo database with default game data
     """
-    me.connect("splendor")
-
     card_data = json.load(open('cards.json', 'r'))
     tile_data = json.load(open('tiles.json', 'r'))
 
-    card_params = ('level', 'gem', 'cost', 'prestige')
-    tile_params = ('requirement', 'prestige')
-    cards = [Card(**{h:d for h, d in zip(card_params, dat)}) for dat in card_data]
-    tiles = [Tile(**{h:d for h, d in zip(tile_params, dat)}) for dat in tile_data]
-    tokens = [Token(gem=gem) for gem in GEMS * 7 + WILD * 5]
+    db = connect_to_db()
 
-    [c.save() for c in cards]
-    [t.save() for t in tiles]
-    [t.save() for t in tokens]
+    if db.cards.count_documents({}) is 0:
+        db.cards.insert_many(card_data)
+    if db.tiles.count_documents({}) is 0:
+        db.tiles.insert_many(tile_data)
+    if db.tokens.count_documents({}) is 0:
+        token_data = [{"gem": gem} for gem in GEMS*7 + WILD*5]
+        db.tokens.insert_many(token_data)
 
-    default_game = DefaultGame()
-    default_game.save()
-    default_game.cards = cards
-    default_game.tiles = tiles
-    default_game.tokens = tokens
-    default_game.save()
+def drop_all_games():
+    db = connect_to_db()
+
+    db.cards.delete_many({"game_id": {"$exists": True}})
+    db.tiles.delete_many({"game_id": {"$exists": True}})
+    db.tokens.delete_many({"game_id": {"$exists": True}})
+    db.players.delete_many({})
+    db.games.delete_many({})
 
 if __name__ == "__main__":
     cli()

@@ -1,12 +1,12 @@
 [
-	[[3, 3, 0, 0, 3], 3],
-	[[0, 0, 4, 4, 0], 3],
-	[[3, 0, 3, 0, 3], 3],
-	[[0, 3, 3, 3, 0], 3],
-	[[0, 4, 0, 4, 0], 3],
-	[[3, 0, 3, 3, 0], 3],
-	[[0, 3, 0, 3, 3], 3],
-	[[4, 0, 0, 0, 4], 3],
-	[[4, 0, 4, 0, 0], 3],
-	[[0, 4, 0, 0, 4], 3]
+	{"requirement": [3, 3, 0, 0, 3], "prestige": 3},
+	{"requirement": [0, 0, 4, 4, 0], "prestige": 3},
+	{"requirement": [3, 0, 3, 0, 3], "prestige": 3},
+	{"requirement": [0, 3, 3, 3, 0], "prestige": 3},
+	{"requirement": [0, 4, 0, 4, 0], "prestige": 3},
+	{"requirement": [3, 0, 3, 3, 0], "prestige": 3},
+	{"requirement": [0, 3, 0, 3, 3], "prestige": 3},
+	{"requirement": [4, 0, 0, 0, 4], "prestige": 3},
+	{"requirement": [4, 0, 4, 0, 0], "prestige": 3},
+	{"requirement": [0, 4, 0, 0, 4], "prestige": 3}
 ]
