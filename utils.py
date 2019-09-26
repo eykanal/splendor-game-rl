@@ -2,11 +2,9 @@ import pickle
 import json
 
 import click
-import mongoengine as me
 import pymongo
 
 from settings import GEMS, WILD
-from models import Card, Tile, Token
 
 
 def connect_to_db():
@@ -48,7 +46,11 @@ def init_mongo():
         token_data = [{"gem": gem} for gem in GEMS*7 + WILD*5]
         db.tokens.insert_many(token_data)
 
+@cli.command()
 def drop_all_games():
+    """
+    Remove all active games from the database
+    """
     db = connect_to_db()
 
     db.cards.delete_many({"game_id": {"$exists": True}})

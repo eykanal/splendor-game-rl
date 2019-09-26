@@ -56,7 +56,9 @@ class Game:
             l = list(filter(lambda x: x['level'] == level, cards))
             s = random.sample(l, 4)
             show_cards.extend(s)
-        db.cards.update_many({"_id": {"$in": [n["_id"] for n in show_cards]}}, {"$set": {"in_play": True}})
+        db.cards.update_many(
+            {"_id": {"$in": [n["_id"] for n in show_cards]}},
+            {"$set": {"in_play": True}})
 
         # play game
         self.play()
