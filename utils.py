@@ -5,6 +5,7 @@ import click
 import pymongo
 
 from settings import GEMS, WILD
+from game import Game
 
 
 def connect_to_db():
@@ -45,6 +46,15 @@ def init_mongo():
     if db.tokens.count_documents({}) is 0:
         token_data = [{"gem": gem} for gem in GEMS*7 + WILD*5]
         db.tokens.insert_many(token_data)
+
+@cli.command()
+def create_new_game(num_players):
+    """
+    Create a new game with NUM_PLAYERS
+    """
+    game = Game(num_players)
+    click.echo("Game ID: %s" % game.game_id)
+
 
 @cli.command()
 def drop_all_games():

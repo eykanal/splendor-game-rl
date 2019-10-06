@@ -7,12 +7,13 @@ from utils import connect_to_db
 
 class Game:
     def __init__(self, num_players):
+        # pylint disable=too-many-locals
         self.players = []
-        self.db = None
+        self.db = None # pylint: disable=invalid-name
         self.game_id = None
 
         # set up new game
-        db = connect_to_db()
+        db = connect_to_db() # pylint: disable=invalid-name
         self.db = db  # for later, will use db now for convenience
 
         game = db.games.insert_one({"turns_taken": 0, "started": datetime.datetime.now()})
@@ -35,8 +36,9 @@ class Game:
         db.tokens.insert_many(game_tokens)
 
         # create players
-        player_ids = db.players.insert_many([{"game_id": game_id, "order": i} for i in range(3)])
-        self.players = [Player(player_id) for player_id in player_ids]
+        player_data = [{"game_id": self.game_id, "order": i} for i in range(num_players)]
+        player_ids = db.players.insert_many(player_data)
+        self.players = [Player(player_id, self.game_id) for player_id in player_ids]
 
         # set tokens appropriately
         token_count = db.tokens.count_documents({'game_id': game_id, 'gem': 'onyx'})
@@ -53,15 +55,19 @@ class Game:
         cards = list(db.cards.find({"game_id": game_id}))
         show_cards = []
         for level in db.cards.distinct('level'):
-            l = list(filter(lambda x: x['level'] == level, cards))
-            s = random.sample(l, 4)
-            show_cards.extend(s)
+            cards_for_level = list(filter(lambda x: x['level'] == level, cards))
+            cards_to_be_shown = random.sample(cards_for_level, 4)
+            show_cards.extend(cards_to_be_shown)
         db.cards.update_many(
             {"_id": {"$in": [n["_id"] for n in show_cards]}},
             {"$set": {"in_play": True}})
 
         # play game
         self.play()
+
+    def _get_cards(self, level, in_play=False, in_hand=False):
+        db = self.db
+        db.cards.find({"game_id": self.game_id, "level": level, "in_play": in_play, "in_hand": in_hand})
 
     def check_earned_tile(self):
         pass

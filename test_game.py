@@ -1,17 +1,19 @@
 import unittest
 
 from game import Game
+from utils import connect_to_db
 
 
 class TestGame(unittest.TestCase):
 
     def setUp(self):
+        self.db = connect_to_db()
         self.game_2 = Game(2)
         self.game_3 = Game(3)
         self.game_4 = Game(4)
 
     def test_assert_correct_num_tokens(self):
-        self.game_2.TokenManager
+        tokens = db.tokens.count_documents
 
     def test_player_take_three_tokens(self):
         player1 = self.game_3.players[0]
